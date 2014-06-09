@@ -24,12 +24,16 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int button_background=0x7f020000;
-        public static final int game_background=0x7f020001;
-        public static final int gradient_background=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
-        public static final int label=0x7f020004;
-        public static final int logo2=0x7f020005;
+        public static final int back_box_3=0x7f020000;
+        public static final int back_box_4=0x7f020001;
+        public static final int box_back_1=0x7f020002;
+        public static final int box_back_2=0x7f020003;
+        public static final int button_background=0x7f020004;
+        public static final int game_background=0x7f020005;
+        public static final int gradient_background=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int label=0x7f020008;
+        public static final int logo2=0x7f020009;
     }
     public static final class id {
         public static final int action_settings=0x7f09000a;
