@@ -3,6 +3,7 @@ package com.example.tictack;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,8 +12,8 @@ import android.widget.RadioButton;
 public class MainActivity extends Activity {
 
 	public int mode;
-	public final int SINGLE_MODE = 1;
-	public final int MULTI_MODE = 2;
+	public static final int SINGLE_MODE = 1;
+	public static final int MULTI_MODE = 2;
 	
 	public Dialog modeSelection;
 	
@@ -26,7 +27,7 @@ public class MainActivity extends Activity {
 	
 	}
 	
-	public void button_clicked(View v){
+	public void button_click(View v){
 		switch(v.getId()){
 		case R.id.new_game:
 			
@@ -37,7 +38,7 @@ public class MainActivity extends Activity {
 			modeSelection.setTitle("Game Mode");
 			modeSelection.setContentView(R.layout.mode_selecting);
 			
-			((RadioButton)findViewById(R.id.single_player_radio)).setOnClickListener(
+			((RadioButton)modeSelection.findViewById(R.id.single_player_radio)).setOnClickListener(
 					new OnClickListener(){
 						public void onClick(View v){
 							mode = SINGLE_MODE;
@@ -46,7 +47,7 @@ public class MainActivity extends Activity {
 					}
 					
 					);
-			((RadioButton)findViewById(R.id.multi_player_radio)).setOnClickListener(
+			((RadioButton)modeSelection.findViewById(R.id.multi_player_radio)).setOnClickListener(
 					new OnClickListener(){
 						public void onClick(View v){
 							mode = MULTI_MODE;
@@ -55,7 +56,11 @@ public class MainActivity extends Activity {
 					}
 					
 					);
-			// ***
+			modeSelection.show();
+			// ***//
+			
+			Intent intent = new Intent(this,Game.class);
+			startActivity(intent);
 			
 			
 			
