@@ -11,5 +11,7 @@
     <string name="single_player">single player</string>
     <string name="multi_player">multi player</string>
     <string name="title_activity_bluetooth_connect">BluetoothConnect</string>
+    <string name="discover">discover devices</string>
+    <string name="pair">pairing devices</string>
 
 </resources>
