@@ -33,7 +33,7 @@
             android:label="@string/title_activity_game" >
         </activity>
         <activity
-            android:name="com.example.tictack.BluetoothConnect"
+            android:name="com.example.tictack.DeviceList"
             android:label="@string/title_activity_bluetooth_connect" >
 
            
