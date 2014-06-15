@@ -10,5 +10,6 @@
     <string name="title_activity_game">Game</string>
     <string name="single_player">single player</string>
     <string name="multi_player">multi player</string>
+    <string name="title_activity_bluetooth_connect">BluetoothConnect</string>
 
 </resources>

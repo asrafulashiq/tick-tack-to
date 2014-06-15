@@ -48,6 +48,24 @@
             />
 
         <Button
+            android:id="@+id/multi_player"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_background"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="4dp"
+            android:text="@string/multi_player"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"
+            android:typeface="monospace" 
+            android:onClick="button_click"
+            />
+        
+        <Button
             android:id="@+id/continue_game"
             android:layout_width="170dp"
             android:layout_height="50dp"

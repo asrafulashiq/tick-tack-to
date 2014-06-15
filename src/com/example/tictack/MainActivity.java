@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.RadioButton;
 
 public class MainActivity extends Activity {
@@ -21,7 +22,25 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		//getActionBar().show();
+		
+		/*((Button)findViewById(R.id.new_game)).setOnClickListener(
+				new OnClickListener(){
+					public void onClick(View v){
+						mode = SINGLE_MODE;
+						//modeSelection.dismiss();
+					}
+				}
+				
+				);
+		((Button)findViewById(R.id.multi_player)).setOnClickListener(
+				new OnClickListener(){
+					public void onClick(View v){
+						mode = MULTI_MODE;
+						//modeSelection.dismiss();
+					}
+				}
+				
+				);*/
 		
 		
 	
@@ -31,14 +50,19 @@ public class MainActivity extends Activity {
 		switch(v.getId()){
 		case R.id.new_game:
 			
+			break;
+		
+		case R.id.multi_player:
+			
 			/*
 			 * showing dialog for game selection mode
 			 */
-			modeSelection = new Dialog(this);
+			/*modeSelection = new Dialog(this);
 			modeSelection.setTitle("Game Mode");
 			modeSelection.setContentView(R.layout.mode_selecting);
+		
 			
-			((RadioButton)modeSelection.findViewById(R.id.single_player_radio)).setOnClickListener(
+			((Button)modeSelection.findViewById(R.id.single_player_radio)).setOnClickListener(
 					new OnClickListener(){
 						public void onClick(View v){
 							mode = SINGLE_MODE;
@@ -47,7 +71,7 @@ public class MainActivity extends Activity {
 					}
 					
 					);
-			((RadioButton)modeSelection.findViewById(R.id.multi_player_radio)).setOnClickListener(
+			((Button)modeSelection.findViewById(R.id.multi_player_radio)).setOnClickListener(
 					new OnClickListener(){
 						public void onClick(View v){
 							mode = MULTI_MODE;
@@ -56,11 +80,15 @@ public class MainActivity extends Activity {
 					}
 					
 					);
-			modeSelection.show();
-			// ***//
+			modeSelection.show();*/
+			//***//
 			
-			Intent intent = new Intent(this,Game.class);
-			startActivity(intent);
+	
+		
+				Intent intent = new Intent(MainActivity.this,BluetoothConnect.class);
+				startActivity(intent);			
+				
+			
 			
 			
 			

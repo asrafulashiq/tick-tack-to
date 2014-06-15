@@ -7,23 +7,16 @@
     android:padding="20dp"
     >
 
-    <RadioGroup
-        android:id="@+id/radioGroup1"
+    <Button
+        android:id="@+id/single_player_radio"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:text="@string/single_player" />
 
-        <RadioButton
-            android:id="@+id/single_player_radio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/single_player" />
-
-        <RadioButton
-            android:id="@+id/multi_player_radio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/multi_player" />
-    </RadioGroup>
+    <Button
+        android:id="@+id/multi_player_radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/multi_player" />
 
 </LinearLayout>
