@@ -29,11 +29,15 @@
         <activity
             android:name="com.example.tictack.Game"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/title_activity_game" >
+            android:label="@string/title_activity_game" 
+            >
         </activity>
         <activity
             android:name="com.example.tictack.DeviceList"
-            android:label="@string/title_activity_bluetooth_connect" >
+              android:label="@string/select_device"
+              android:theme="@android:style/Theme.Holo.Dialog"
+              android:configChanges="orientation|keyboardHidden" 
+             >
         </activity>
         <activity
             android:name="com.example.tictack.GamePanel"

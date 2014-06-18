@@ -19,6 +19,7 @@
         android:columnCount="3"
         android:rowCount="3"
         android:padding="0dp"
+        android:visibility="invisible"
         >
 
         <Button

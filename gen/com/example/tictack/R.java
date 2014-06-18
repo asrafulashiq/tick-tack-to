@@ -52,14 +52,17 @@ public final class R {
         public static final int button9=0x7f09000e;
         public static final int button_scan=0x7f090004;
         public static final int continue_game=0x7f090013;
+        public static final int discoverable=0x7f09001a;
         public static final int imageButton1=0x7f09000f;
         public static final int imageButton2=0x7f090010;
         public static final int imageView1=0x7f090005;
+        public static final int insecure_connect_scan=0x7f090019;
         public static final int multi_player=0x7f090012;
         public static final int multi_player_radio=0x7f090016;
         public static final int new_devices=0x7f090003;
         public static final int new_game=0x7f090011;
         public static final int paired_devices=0x7f090001;
+        public static final int secure_connect_scan=0x7f090018;
         public static final int single_player_radio=0x7f090015;
         public static final int title_new_devices=0x7f090002;
         public static final int title_paired_devices=0x7f090000;
@@ -78,6 +81,7 @@ public final class R {
         public static final int game=0x7f080001;
         public static final int game_panel=0x7f080002;
         public static final int main=0x7f080003;
+        public static final int option_menu=0x7f080004;
     }
     public static final class string {
         public static final int about_game=0x7f050005;
