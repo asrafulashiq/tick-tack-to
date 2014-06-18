@@ -1,420 +1,202 @@
+/*
+ * Copyright (C) 2009 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.example.tictack;
 
-import java.io.IOException;
 import java.util.Set;
-import java.util.UUID;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class DeviceList extends Activity implements OnClickListener{
+/**
+ * This Activity appears as a dialog. It lists any paired devices and
+ * devices detected in the area after discovery. When a device is chosen
+ * by the user, the MAC address of the device is sent back to the parent
+ * Activity in the result Intent.
+ */
+public class DeviceList extends Activity {
+    // Debugging
+    private static final String TAG = "DeviceListActivity";
+    private static final boolean D = true;
 
-	public final int REQUEST_ENABLE_BT = 1;
-	
-	public static final String NAME="ASHIQ";
-	public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-	 
-	private BluetoothAdapter mBluetoothAdapter;
-	
-	private ListView discover_list_view ;
-	private ListView pair_list_view;
-	//private Set<BluetoothDevice> discoveredDevicesSet=null;
-	//private Set<BluetoothDevice> pairedDevicesSet=null;
-	
-	public  AcceptThread acceptThread=null;
-	public ConnectThread connectThread=null;
-	
-	public boolean continueAccepting = true;
-	public boolean continueConnecting = true;
-	
-	
-	// temp
-	TextView tmp;
-	
-	
-	private ArrayAdapter<String> mPairedDevicesArrayAdapter ;
-	private ArrayAdapter<String> mNewDevicesArrayAdapter;
-	
-	
+    // Return Intent extra
+    public static String EXTRA_DEVICE_ADDRESS = "device_address";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.activity_bluetooth_connect);
+    // Member fields
+    private BluetoothAdapter mBtAdapter;
+    private ArrayAdapter<String> mPairedDevicesArrayAdapter;
+    private ArrayAdapter<String> mNewDevicesArrayAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Setup the window
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.device_list);
 
-		
-		this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		this.discover_list_view = (ListView)findViewById(R.id.discoveredDevices);
-		this.pair_list_view = (ListView)this.findViewById(R.id.pairedDevices);
-		this.mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1);
-		this.mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1);
-		
-		// tmp
-		tmp = (TextView)this.findViewById(R.id.tmp);
-		
-		Button b1 = (Button)this.findViewById(R.id.pair);
-		Button b2 = (Button)this.findViewById(R.id.discover);
-		
-		b1.setOnClickListener(this);
-		b2.setOnClickListener(this);
-		
-		
-		
-		
-		if(this.mBluetoothAdapter==null){
-			// device doesn't support bluetooth
-			Toast.makeText(this, "Device does not support bluetooth", Toast.LENGTH_LONG).show();
-			this.finish();
-		}
-		else{
-			
-			if(!this.mBluetoothAdapter.isEnabled()){
-				// enable bluetooth
-				Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				this.startActivityForResult(intent, this.REQUEST_ENABLE_BT);
-				
-			}
-			
-		}
-		
-		//this.enableDiscoverity();
-		
-		this.discover_list_view.setOnItemClickListener(
-				new OnItemClickListener(){
+        // Set result CANCELED in case the user backs out
+        setResult(Activity.RESULT_CANCELED);
 
-					@Override
-					public void onItemClick(AdapterView<?> adapter, View view,
-							int position, long id) {
-						// TODO Auto-generated method stub
-						String deviceIdentity = (String) adapter.getItemAtPosition(position);
-						String address = getAddress(deviceIdentity);
-						if(BluetoothAdapter.checkBluetoothAddress(address)){
-							if(connectThread!=null){
-								connectThread.cancel();
-								connectThread=null;
-							}
-							connectThread = new ConnectThread(mBluetoothAdapter.getRemoteDevice(getAddress(deviceIdentity)));
-							connectThread.start();
-							Toast.makeText(getApplicationContext(), "initializing connection to "+deviceIdentity, Toast.LENGTH_SHORT).show();
+        // Initialize the button to perform device discovery
+        Button scanButton = (Button) findViewById(R.id.button_scan);
+        scanButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                doDiscovery();
+                v.setVisibility(View.GONE);
+            }
+        });
 
-							
-						}
-						else{
-							Toast.makeText(getApplicationContext(), "wrong bluetooth address", Toast.LENGTH_SHORT).show();
-						}
-					}
-					
-				}
-				);
-		
-		
-		this.pair_list_view.setOnItemClickListener(
-				new OnItemClickListener(){
+        // Initialize array adapters. One for already paired devices and
+        // one for newly discovered devices
+        mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
+        mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
 
-					@Override
-					public void onItemClick(AdapterView<?> adapter, View view,
-							int position, long id) {
-						// TODO Auto-generated method stub
-						String deviceIdentity = (String) adapter.getItemAtPosition(position);
-						//Toast.makeText(getApplicationContext(), "initializing connection to "+deviceIdentity, Toast.LENGTH_SHORT).show();
+        // Find and set up the ListView for paired devices
+        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
+        pairedListView.setAdapter(mPairedDevicesArrayAdapter);
+        pairedListView.setOnItemClickListener(mDeviceClickListener);
 
-						String address = getAddress(deviceIdentity);
-						if(BluetoothAdapter.checkBluetoothAddress(address)){
-							if(connectThread!=null){
-								connectThread.cancel();
-								connectThread=null;
-							}
-							connectThread = new ConnectThread(mBluetoothAdapter.getRemoteDevice(getAddress(deviceIdentity)));
-							Toast.makeText(getApplicationContext(), "initializing connection to "+deviceIdentity, Toast.LENGTH_SHORT).show();
-							connectThread.start();
+        // Find and set up the ListView for newly discovered devices
+        ListView newDevicesListView = (ListView) findViewById(R.id.new_devices);
+        newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
+        newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
-							
-						}
-						else{
-							Toast.makeText(getApplicationContext(), "wrong bluetooth address", Toast.LENGTH_SHORT).show();
-						}
-						
-						
-					
-					}
-					
-				}
-				);
-		
-		
-		
-		this.acceptThread = new AcceptThread();
-		this.acceptThread.start();
-		
-	}
-	
-	
-	public String getAddress(String str){
-		String t[]=str.split("\n");
-		return t[1].trim();
-		
-	}
-	
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		return super.onOptionsItemSelected(item);
-	}
-	
-	
-	public void enableDiscoverity(){
-		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-		startActivity(discoverableIntent);
-	}
-	
-	/*
-	 * show lists of paired devices in list view
-	 */
-	public void pairing(){
-		
-	 Set<BluetoothDevice>  pairedDevicesSet = this.mBluetoothAdapter.getBondedDevices();
-		/*if(!this.mPairedDevicesArrayAdapter.isEmpty()){
-			this.mPairedDevicesArrayAdapter.clear();
-		}*/
-		
-		for(BluetoothDevice device:pairedDevicesSet){
-			this.mPairedDevicesArrayAdapter.add(device.getName()+"\n"+device.getAddress());
-		}
-		
-		this.pair_list_view.setAdapter(this.mPairedDevicesArrayAdapter);
-		
-		
-	}
-	
-	/*
-	 * show list of discovered devices in list view
-	 */
-	public void discoverDevices(){
+        // Register for broadcasts when a device is discovered
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        this.registerReceiver(mReceiver, filter);
+
+        // Register for broadcasts when discovery has finished
+        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        this.registerReceiver(mReceiver, filter);
+
+        // Get the local Bluetooth adapter
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // Get a set of currently paired devices
+        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+
+        // If there are paired devices, add each one to the ArrayAdapter
+        if (pairedDevices.size() > 0) {
+            findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
+            for (BluetoothDevice device : pairedDevices) {
+                mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+            }
+        } else {
+            String noDevices = getResources().getText(R.string.none_paired).toString();
+            mPairedDevicesArrayAdapter.add(noDevices);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Make sure we're not doing discovery anymore
+        if (mBtAdapter != null) {
+            mBtAdapter.cancelDiscovery();
+        }
+
+        // Unregister broadcast listeners
+        this.unregisterReceiver(mReceiver);
+    }
+
+    /**
+     * Start device discover with the BluetoothAdapter
+     */
+    private void doDiscovery() {
+        if (D) Log.d(TAG, "doDiscovery()");
+
+        // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);
+        setTitle(R.string.scanning);
 
-		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		this.registerReceiver(mReceiver, filter);
-		this.mBluetoothAdapter.startDiscovery();
-		
-		
-	}
-	
-	
-	// create a BroadcastReceiver for ACTION_FOUND
-	private final BroadcastReceiver mReceiver = new BroadcastReceiver(){
+        // Turn on sub-title for new devices
+        findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			String action = intent.getAction();
-			
-			if(BluetoothDevice.ACTION_FOUND.equals(action)){
-				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				mNewDevicesArrayAdapter.add(device.getName()+"\n"+device.getAddress());
-				
-				//
-				//discoveredDevicesSet.add(device);
-			}
-			
-			discover_list_view.setAdapter(mNewDevicesArrayAdapter);
-		}
-		
-	};
-	
-	
-	
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch(v.getId()){
-		case R.id.pair:
-			this.pairing();
-			break;
-			
-		case R.id.discover:
-			this.discoverDevices();
-			break;
-		}
-		
-	}
+        // If we're already discovering, stop it
+        if (mBtAdapter.isDiscovering()) {
+            mBtAdapter.cancelDiscovery();
+        }
 
-	
+        // Request discover from BluetoothAdapter
+        mBtAdapter.startDiscovery();
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode==this.REQUEST_ENABLE_BT){
-			if(resultCode==RESULT_OK){
-				Toast.makeText(getApplicationContext(), "bluetooth is enabled", Toast.LENGTH_SHORT).show();
-				// bluetooth has been enabled
-				
-			}
-			else {
-				Toast.makeText(getApplicationContext(), "Bluetooth is not enabled",Toast.LENGTH_SHORT).show();
-				this.finish();
-			}
-		}
-	}
-	
-	private class ConnectThread extends Thread {
-	    private final BluetoothSocket mmSocket;
-	    private final BluetoothDevice mmDevice;
-	 
-	    public ConnectThread(BluetoothDevice device) {
-	        // Use a temporary object that is later assigned to mmSocket,
-	        // because mmSocket is final
-	        BluetoothSocket tmp = null;
-	        mmDevice = device;
-	 
-	        // Get a BluetoothSocket to connect with the given BluetoothDevice
-	        try {
-	            // MY_UUID is the app's UUID string, also used by the server code
-	            tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
-	        } catch (IOException e) { }
-	        mmSocket = tmp;
-	    }
-	 
-	    
-		public void run() {
-	        // Cancel discovery because it will slow down the connection
-	        mBluetoothAdapter.cancelDiscovery();
-	 
-	        try {
-	            // Connect the device through the socket. This will block
-	            // until it succeeds or throws an exception
-	            mmSocket.connect();
-	            Toast.makeText(getApplicationContext(), "Connected with "+mmDevice.getName(), Toast.LENGTH_SHORT).show();
-	        } catch (IOException connectException) {
-	            // Unable to connect; close the socket and get out
-	            try {
-	                mmSocket.close();
-	            } catch (IOException closeException) { }
-	            return;
-	        }
-	 
-	 
-	    }
-	 
-	    /** Will cancel an in-progress connection, and close the socket */
-	    public void cancel() {
-	        try {
-	            mmSocket.close();
-	        } catch (IOException e) { }
-	    }
-	}
-	
-	
-	private class AcceptThread extends Thread {
-	    private final BluetoothServerSocket mmServerSocket;
-	 
-	    public AcceptThread() {
-	        // Use a temporary object that is later assigned to mmServerSocket,
-	        // because mmServerSocket is final
-	        BluetoothServerSocket tmp = null;
-	        try {
-	            // MY_UUID is the app's UUID string, also used by the client code
-	            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
-	        } catch (IOException e) { }
-	        mmServerSocket = tmp;
-	    }
-	 
-	    public void run() {
-	        BluetoothSocket socket = null;
-	        // Keep listening until exception occurs or a socket is returned
-	        while (true) {
-	            try {
-	                socket = mmServerSocket.accept();
-	                
-	                Toast.makeText(getApplicationContext(), "Received connection", Toast.LENGTH_LONG).show();
-	            } catch (IOException e) {
-	                break;
-	            }
-	            // If a connection was accepted
-	            if (socket != null) {
-	                // Do work to manage the connection (in a separate thread)
-	                //manageConnectedSocket(socket);
-	                try {
-						mmServerSocket.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	                break;
-	            }
-	        }
-	    }
-	}
-	
+    // The on-click listener for all devices in the ListViews
+    private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
+        public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
+            // Cancel discovery because it's costly and we're about to connect
+            mBtAdapter.cancelDiscovery();
 
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		if(this.mBluetoothAdapter!=null){
-			this.mBluetoothAdapter.cancelDiscovery();
-		}
-		this.unregisterReceiver(mReceiver);
-		
-	}
+            // Get the device MAC address, which is the last 17 chars in the View
+            String info = ((TextView) v).getText().toString();
+            String address = info.substring(info.length() - 17);
 
-	
+            // Create the result Intent and include the MAC address
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
 
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-	}
+            // Set result and finish this Activity
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }
+    };
 
-	@Override
-	protected void onRestart() {
-		// TODO Auto-generated method stub
-		super.onRestart();
-	}
+    // The BroadcastReceiver that listens for discovered devices and
+    // changes the title when discovery is finished
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-	}
+            // When discovery finds a device
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Get the BluetoothDevice object from the Intent
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                // If it's already paired, skip it, because it's been listed already
+                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                    mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                }
+            // When discovery is finished, change the Activity title
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                setProgressBarIndeterminateVisibility(false);
+                setTitle(R.string.select_device);
+                if (mNewDevicesArrayAdapter.getCount() == 0) {
+                    String noDevices = getResources().getText(R.string.none_found).toString();
+                    mNewDevicesArrayAdapter.add(noDevices);
+                }
+            }
+        }
+    };
 
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-	}
-		
 }
-	
-	
-	
-

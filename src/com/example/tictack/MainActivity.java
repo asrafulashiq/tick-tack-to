@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
 			
 	
 		
-				Intent intent = new Intent(MainActivity.this,DeviceList.class);
+				Intent intent = new Intent(MainActivity.this,Game.class);
 				startActivity(intent);			
 				
 			
