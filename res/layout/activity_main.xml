@@ -45,6 +45,10 @@
             android:textStyle="bold"
             android:typeface="monospace" 
             android:onClick="button_click"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius=".6"
+            android:shadowColor="#000000"
             />
 
         <Button
@@ -58,7 +62,7 @@
             android:paddingRight="10dp"
             android:paddingTop="4dp"
             android:text="@string/multi_player"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
             android:textColor="@color/text_color"
             android:textStyle="bold"
             android:typeface="monospace" 

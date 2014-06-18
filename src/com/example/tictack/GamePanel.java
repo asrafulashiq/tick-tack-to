@@ -1,36 +1,22 @@
 package com.example.tictack;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.view.MotionEvent;
-import android.view.View;
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
 
-public class GamePanel extends View{
+public class GamePanel extends Activity {
 
-	public GamePanel(Context context) {
-		super(context);
-
-		
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_game_panel);
 	}
 
 	@Override
-	public void invalidate(int l, int t, int r, int b) {
-		// TODO Auto-generated method stub
-		super.invalidate(l, t, r, b);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.game_panel, menu);
+		return true;
 	}
-
-	@Override
-	protected void onDraw(Canvas canvas) {
-		// TODO Auto-generated method stub
-		super.onDraw(canvas);
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-		return super.onTouchEvent(event);
-	}
-	
-	
 
 }

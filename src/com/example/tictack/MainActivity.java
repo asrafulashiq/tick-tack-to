@@ -89,9 +89,6 @@ public class MainActivity extends Activity {
 				startActivity(intent);			
 				
 			
-			
-			
-			
 			break;
 		case R.id.continue_game:
 			

@@ -7,6 +7,7 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="18" />
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
@@ -19,13 +20,11 @@
             android:name="com.example.tictack.MainActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
-            
-                        <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            
         </activity>
         <activity
             android:name="com.example.tictack.Game"
@@ -35,8 +34,10 @@
         <activity
             android:name="com.example.tictack.DeviceList"
             android:label="@string/title_activity_bluetooth_connect" >
-
-           
+        </activity>
+        <activity
+            android:name="com.example.tictack.GamePanel"
+            android:label="@string/title_activity_game_panel" >
         </activity>
     </application>
 

@@ -2,6 +2,7 @@ package com.example.tictack;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.bluetooth.BluetoothServerSocket;
 import android.view.Menu;
 import android.widget.LinearLayout;
 
@@ -25,5 +26,7 @@ public class Game extends Activity {
 		getMenuInflater().inflate(R.menu.game, menu);
 		return true;
 	}
+	
+	
 
 }

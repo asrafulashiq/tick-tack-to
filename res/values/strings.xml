@@ -13,5 +13,6 @@
     <string name="title_activity_bluetooth_connect">BluetoothConnect</string>
     <string name="discover">discover devices</string>
     <string name="pair">pairing devices</string>
+    <string name="title_activity_game_panel">GamePanel</string>
 
 </resources>
