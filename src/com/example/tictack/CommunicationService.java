@@ -311,6 +311,12 @@ public class CommunicationService {
                         case STATE_LISTEN:
                         case STATE_CONNECTING:
                             // Situation normal. Start the connected thread.
+                        	
+                        	Message msg = mHandler.obtainMessage(Game.MESSAGE_PLAYER_SELECTION);
+                        	Bundle bun = new Bundle();
+                        	bun.putString(Game.PLAYER_SELECTION, "2");
+                        	msg.setData(bun);
+                        	mHandler.sendMessage(msg);
                             connected(socket, socket.getRemoteDevice(),
                                     mSocketType);
                             break;

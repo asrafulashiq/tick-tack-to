@@ -1,9 +1,6 @@
 package com.example.tictack;
 
-
-
-
-
+import java.util.Random;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +14,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -31,11 +30,22 @@ public class Game extends Activity {
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
+    public static final int MESSAGE_PLAYER_SELECTION = 6; // selection for which player you are - 1 or 2 ?    
+    
+    public static boolean game_started = false;
+    public static boolean my_turn = false;
+    public static String my_token = null;
 
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
-
+    public static final int PLAYER_ONE = 1;
+    public static final int PLAYER_TWO = 2;
+    public static final String PLAYER_SELECTION = "your player :";
+    
+    public static int MY_PLAYER ; 
+    
+    
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
@@ -81,14 +91,16 @@ public class Game extends Activity {
         // Otherwise, setup the chat session
         } else {
             if (mChatService == null) {
-                // Initialize the BluetoothChatService to perform bluetooth connections
-                mChatService = new CommunicationService(this, mHandler);
-
-                // Initialize the buffer for outgoing messages
-                mOutStringBuffer = new StringBuffer("");
+            	this.setUp();
             }
         }
     }
+	
+	public void setUp(){
+		this.mChatService = new CommunicationService(this,this.mHandler);
+        mOutStringBuffer = new StringBuffer("");
+
+	}
 	
 	 @Override
 	    public synchronized void onResume() {
@@ -162,6 +174,28 @@ public class Game extends Activity {
     }
 
 	
+    /**
+     * Sends a message.
+     * @param message  A string of text to send.
+     */
+    private void sendMessage(String message) {
+        // Check that we're actually connected before trying anything
+        if (mChatService.getState() != CommunicationService.STATE_CONNECTED) {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check that there's actually something to send
+        if (message.length() > 0) {
+            // Get the message bytes and tell the BluetoothChatService to write
+            byte[] send = message.getBytes();
+            mChatService.write(send);
+
+            // Reset out string buffer to zero and clear the edit text field
+            mOutStringBuffer.setLength(0);
+            //mOutEditText.setText(mOutStringBuffer);
+        }
+    }
 	
 	
 	
@@ -198,6 +232,7 @@ public class Game extends Activity {
     private final void setStatus(int resId) {
         final ActionBar actionBar = getActionBar();
         actionBar.setSubtitle(resId);
+       
     }
 
     private final void setStatus(CharSequence subTitle) {
@@ -215,6 +250,7 @@ public class Game extends Activity {
                 case CommunicationService.STATE_CONNECTED:
                     setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
                    // mConversationArrayAdapter.clear();
+                    startGame();
                     break;
                 case CommunicationService.STATE_CONNECTING:
                     setStatus(R.string.title_connecting);
@@ -247,9 +283,54 @@ public class Game extends Activity {
                 Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
                                Toast.LENGTH_SHORT).show();
                 break;
+            case MESSAGE_PLAYER_SELECTION:
+            	if( (msg.getData().getString(PLAYER_SELECTION)).equals("two") ){
+            		
+            	}
+            	
             }
         }
     };
+
+	protected void startGame() {
+		// TODO Auto-generated method stub
+		((GridLayout) this.findViewById(R.id.gridLayout)).setVisibility(View.VISIBLE);
+		this.game_started = true;
+		//this.setStatus(this.getString(R.string.game_started_dialog));
+		Toast.makeText(getApplicationContext(), this.getString(R.string.game_started_dialog), Toast.LENGTH_SHORT).show();
+		
+		
+		
+	}
+	
+	
+	/**
+	 * 
+	 * @param view view for the button clicked
+	 */
+	public void button_clicked(View view){
+		if(this.game_started==true){
+			if(this.my_turn==true){
+				
+			}
+		}
+		
+	}
+	
+	/**
+	 * initialize who is player 1 or two
+	 */
+	public void initialize_player(View view){
+		Random r = new Random();
+		if(r.nextBoolean()==true){
+			this.setStatus("You are player 1");
+			this.sendMessage("player:2");
+			this.my_turn=true;
+			this.my_token="X";
+			
+		}
+		
+	}
 
 	
 

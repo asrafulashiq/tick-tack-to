@@ -39,31 +39,32 @@ public final class R {
         public static final int normal1=0x7f02000c;
     }
     public static final class id {
-        public static final int about_game=0x7f090014;
-        public static final int action_settings=0x7f090017;
-        public static final int button1=0x7f090006;
-        public static final int button2=0x7f090007;
-        public static final int button3=0x7f090008;
-        public static final int button4=0x7f090009;
-        public static final int button5=0x7f09000a;
-        public static final int button6=0x7f09000b;
-        public static final int button7=0x7f09000c;
-        public static final int button8=0x7f09000d;
-        public static final int button9=0x7f09000e;
+        public static final int about_game=0x7f090015;
+        public static final int action_settings=0x7f090018;
+        public static final int button1=0x7f090007;
+        public static final int button2=0x7f090008;
+        public static final int button3=0x7f090009;
+        public static final int button4=0x7f09000a;
+        public static final int button5=0x7f09000b;
+        public static final int button6=0x7f09000c;
+        public static final int button7=0x7f09000d;
+        public static final int button8=0x7f09000e;
+        public static final int button9=0x7f09000f;
         public static final int button_scan=0x7f090004;
-        public static final int continue_game=0x7f090013;
-        public static final int discoverable=0x7f09001a;
-        public static final int imageButton1=0x7f09000f;
-        public static final int imageButton2=0x7f090010;
-        public static final int imageView1=0x7f090005;
-        public static final int insecure_connect_scan=0x7f090019;
-        public static final int multi_player=0x7f090012;
-        public static final int multi_player_radio=0x7f090016;
+        public static final int continue_game=0x7f090014;
+        public static final int discoverable=0x7f09001b;
+        public static final int gridLayout=0x7f090005;
+        public static final int imageButton1=0x7f090010;
+        public static final int imageButton2=0x7f090011;
+        public static final int imageView1=0x7f090006;
+        public static final int insecure_connect_scan=0x7f09001a;
+        public static final int multi_player=0x7f090013;
+        public static final int multi_player_radio=0x7f090017;
         public static final int new_devices=0x7f090003;
-        public static final int new_game=0x7f090011;
+        public static final int new_game=0x7f090012;
         public static final int paired_devices=0x7f090001;
-        public static final int secure_connect_scan=0x7f090018;
-        public static final int single_player_radio=0x7f090015;
+        public static final int secure_connect_scan=0x7f090019;
+        public static final int single_player_radio=0x7f090016;
         public static final int title_new_devices=0x7f090002;
         public static final int title_paired_devices=0x7f090000;
     }
@@ -91,9 +92,10 @@ public final class R {
         public static final int button_scan=0x7f050019;
         public static final int continue_game=0x7f050004;
         public static final int discover=0x7f05000a;
-        public static final int discoverable=0x7f05001c;
+        public static final int discoverable=0x7f05001d;
+        public static final int game_started_dialog=0x7f05001a;
         public static final int hello_world=0x7f050002;
-        public static final int insecure_connect=0x7f05001b;
+        public static final int insecure_connect=0x7f05001c;
         public static final int multi_player=0x7f050008;
         public static final int new_game=0x7f050003;
         public static final int none_found=0x7f050016;
@@ -105,7 +107,7 @@ public final class R {
         public static final int scanning=0x7f050013;
         /**  Options Menu 
          */
-        public static final int secure_connect=0x7f05001a;
+        public static final int secure_connect=0x7f05001b;
         public static final int select_device=0x7f050014;
         public static final int send=0x7f05000d;
         public static final int single_player=0x7f050007;
