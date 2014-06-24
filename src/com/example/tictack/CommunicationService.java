@@ -16,10 +16,15 @@
 
 package com.example.tictack;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
+
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -312,11 +317,6 @@ public class CommunicationService {
                         case STATE_CONNECTING:
                             // Situation normal. Start the connected thread.
                         	
-                        	Message msg = mHandler.obtainMessage(Game.MESSAGE_PLAYER_SELECTION);
-                        	Bundle bun = new Bundle();
-                        	bun.putString(Game.PLAYER_SELECTION, "2");
-                        	msg.setData(bun);
-                        	mHandler.sendMessage(msg);
                             connected(socket, socket.getRemoteDevice(),
                                     mSocketType);
                             break;
@@ -479,6 +479,7 @@ public class CommunicationService {
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
+               
 
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(Game.MESSAGE_WRITE, -1, -1, buffer)

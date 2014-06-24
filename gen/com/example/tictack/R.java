@@ -93,6 +93,7 @@ public final class R {
         public static final int continue_game=0x7f050004;
         public static final int discover=0x7f05000a;
         public static final int discoverable=0x7f05001d;
+        public static final int game_draw=0x7f050023;
         public static final int game_started_dialog=0x7f05001a;
         public static final int hello_world=0x7f050002;
         public static final int insecure_connect=0x7f05001c;
@@ -101,7 +102,10 @@ public final class R {
         public static final int none_found=0x7f050016;
         public static final int none_paired=0x7f050015;
         public static final int not_connected=0x7f05000e;
+        public static final int opponent_turn=0x7f050020;
         public static final int pair=0x7f05000b;
+        public static final int player1_turn=0x7f05001e;
+        public static final int player2_turn=0x7f05001f;
         /**   DeviceListActivity 
          */
         public static final int scanning=0x7f050013;
@@ -119,6 +123,9 @@ public final class R {
         public static final int title_not_connected=0x7f050012;
         public static final int title_other_devices=0x7f050018;
         public static final int title_paired_devices=0x7f050017;
+        public static final int you_lost=0x7f050022;
+        public static final int you_won=0x7f050021;
+        public static final int your_turn=0x7f050024;
     }
     public static final class style {
         /** 

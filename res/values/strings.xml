@@ -35,5 +35,11 @@
     <string name="secure_connect">Connect a device - Secure</string>
     <string name="insecure_connect">Connect a device - Insecure</string>
     <string name="discoverable">Make discoverable</string>
-
+	<string name="player1_turn">You are player 1 : Your Turn</string>
+	<string name="player2_turn">You are player 2 : Your Turn</string>
+	<string name="opponent_turn">Opponent Turn</string>
+	<string name="you_won">You are the winner</string>
+	<string name="you_lost">You lost</string>
+	<string name="game_draw">Game is draw</string>
+	<string name="your_turn">your turn</string>
 </resources>

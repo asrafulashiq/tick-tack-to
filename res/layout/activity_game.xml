@@ -25,14 +25,14 @@
 
         <Button
             android:id="@+id/button1"
-            android:layout_gravity="left"
-            android:text="" 
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:tag="1"
+            android:layout_gravity="left"
             android:background="@drawable/box_back_1"
             android:onClick="buttonClicked"
-            />
+            android:tag="0"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
             android:id="@+id/button2"
@@ -40,21 +40,23 @@
             android:layout_marginLeft="-9dp"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:tag="2"
+            android:tag="1"
             android:background="@drawable/box_back_1"  
             android:onClick="buttonClicked"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="" />
 
         <Button
             android:id="@+id/button3"
+            android:layout_width="65dp"
+            android:layout_height="70dp"
             android:layout_gravity="left"
             android:layout_marginLeft="-9dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:tag="3"
-            android:background="@drawable/box_back_2"  
+            android:background="@drawable/box_back_2"
             android:onClick="buttonClicked"
-            android:text="" />
+            android:tag="2"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
             android:id="@+id/button4"
@@ -62,35 +64,39 @@
             android:layout_marginTop="-9dp"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:tag="4"
+            android:tag="3"
             android:onClick="buttonClicked"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:background="@drawable/box_back_1"  
             
             android:text="" />
 
         <Button
             android:id="@+id/button5"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="left"
             android:layout_marginLeft="-9dp"
             android:layout_marginTop="-9dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:tag="5"
+            android:background="@drawable/box_back_1"
             android:onClick="buttonClicked"
-            android:background="@drawable/box_back_1"  
-            android:text="" />
+            android:tag="4"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
             android:id="@+id/button6"
+            android:layout_width="65dp"
+            android:layout_height="70dp"
             android:layout_gravity="left"
             android:layout_marginLeft="-9dp"
             android:layout_marginTop="-9dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:tag="6"
-            android:background="@drawable/box_back_2"  
-			android:onClick="buttonClicked"
-            android:text="" />
+            android:background="@drawable/box_back_2"
+            android:onClick="buttonClicked"
+            android:tag="5"
+            android:text=""
+            
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
             android:id="@+id/button7"
@@ -98,9 +104,10 @@
             android:layout_marginTop="-9dp"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:tag="7"
+            android:tag="6"
             android:background="@drawable/back_box_3" 
             android:onClick="buttonClicked" 
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="" />
 
         <Button
@@ -110,9 +117,10 @@
             android:layout_marginTop="-9dp"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:tag="8"
+            android:tag="7"
             android:background="@drawable/back_box_3"  
             android:onClick="buttonClicked"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="" />
 
         <Button
@@ -120,10 +128,11 @@
             android:layout_gravity="left"
             android:layout_marginLeft="-9dp"
             android:layout_marginTop="-9dp"
-            android:layout_width="70dp"
+            android:layout_width="65dp"
             android:layout_height="70dp"
-            android:tag="9"
-            android:background="@drawable/back_box_4"  
+            android:tag="8"
+            android:background="@drawable/back_box_4" 
+            android:textAppearance="?android:attr/textAppearanceLarge" 
 			android:onClick="buttonClicked"
             android:text="" />
 
@@ -137,6 +146,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="53dp"
         android:contentDescription="@string/app_name"
+        android:onClick="initialize_player"
         android:src="@drawable/label" />
 
 </RelativeLayout>
