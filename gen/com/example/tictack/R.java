@@ -29,14 +29,15 @@ public final class R {
         public static final int box_back_1=0x7f020002;
         public static final int box_back_2=0x7f020003;
         public static final int button_background=0x7f020004;
-        public static final int game_background=0x7f020005;
-        public static final int glow=0x7f020006;
-        public static final int gradient_background=0x7f020007;
-        public static final int ic_launcher=0x7f020008;
-        public static final int label=0x7f020009;
-        public static final int logo2=0x7f02000a;
-        public static final int normal=0x7f02000b;
-        public static final int normal1=0x7f02000c;
+        public static final int cross=0x7f020005;
+        public static final int game_background=0x7f020006;
+        public static final int glow=0x7f020007;
+        public static final int gradient_background=0x7f020008;
+        public static final int ic_launcher=0x7f020009;
+        public static final int label=0x7f02000a;
+        public static final int logo2=0x7f02000b;
+        public static final int normal=0x7f02000c;
+        public static final int normal1=0x7f02000d;
     }
     public static final class id {
         public static final int about_game=0x7f090015;
@@ -73,9 +74,12 @@ public final class R {
         public static final int activity_game=0x7f030001;
         public static final int activity_game_panel=0x7f030002;
         public static final int activity_main=0x7f030003;
-        public static final int device_list=0x7f030004;
-        public static final int device_name=0x7f030005;
-        public static final int mode_selecting=0x7f030006;
+        public static final int activity_server=0x7f030004;
+        public static final int device_list=0x7f030005;
+        public static final int device_name=0x7f030006;
+        public static final int game_finish_dialog=0x7f030007;
+        public static final int join_table=0x7f030008;
+        public static final int mode_selecting=0x7f030009;
     }
     public static final class menu {
         public static final int bluetooth_connect=0x7f080000;
@@ -83,6 +87,7 @@ public final class R {
         public static final int game_panel=0x7f080002;
         public static final int main=0x7f080003;
         public static final int option_menu=0x7f080004;
+        public static final int server=0x7f080005;
     }
     public static final class string {
         public static final int about_game=0x7f050005;
@@ -106,7 +111,7 @@ public final class R {
         public static final int pair=0x7f05000b;
         public static final int player1_turn=0x7f05001e;
         public static final int player2_turn=0x7f05001f;
-        /**   DeviceListActivity 
+        /**  DeviceListActivity 
          */
         public static final int scanning=0x7f050013;
         /**  Options Menu 
@@ -118,6 +123,7 @@ public final class R {
         public static final int title_activity_bluetooth_connect=0x7f050009;
         public static final int title_activity_game=0x7f050006;
         public static final int title_activity_game_panel=0x7f05000c;
+        public static final int title_activity_server=0x7f050025;
         public static final int title_connected_to=0x7f050011;
         public static final int title_connecting=0x7f050010;
         public static final int title_not_connected=0x7f050012;

@@ -7,10 +7,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Game extends Activity {
@@ -38,8 +41,8 @@ public class Game extends Activity {
     
     public boolean game_started = false;
     public boolean my_turn = false;
-    public String my_token = null;
-    public String opponent_token=null;
+    public String my_token = "X";
+    public String opponent_token="0";
 
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
@@ -51,7 +54,7 @@ public class Game extends Activity {
     public static final int GAME_DRAW = -4;
     public static final int GAME_LOST = -5;
     public static final int GAME_CONTINUE = -6;
-    public static final int NONE = 0;
+    public final int NONE = 0;
     
     public  int MY_PLAYER ;
     public  int OPPONENT_PLAYER;
@@ -83,8 +86,11 @@ public class Game extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		
+		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+		
+		
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
@@ -96,7 +102,7 @@ public class Game extends Activity {
         for(int i=0;i<9;i++){
         	this.buttonTag[i]=this.NONE;
         	
-			int resID = getResources().getIdentifier("Button"+(i+1),"id",getPackageName());
+			int resID = getResources().getIdentifier("button"+(i+1),"id",getPackageName());
 			this.buttons[i] = (Button)this.findViewById(resID);
 
         }
@@ -125,7 +131,9 @@ public class Game extends Activity {
 	
 	public void setUp(){
 		this.mChatService = new CommunicationService(this,this.mHandler);
-        mOutStringBuffer = new StringBuffer("");
+        
+		mOutStringBuffer = new StringBuffer("");
+		
 
 	}
 	
@@ -133,6 +141,7 @@ public class Game extends Activity {
 	    public synchronized void onResume() {
 	        super.onResume();
 	        if(D) Log.e(TAG, "+ ON RESUME +");
+	       
 
 	        // Performing this check in onResume() covers the case in which BT was
 	        // not enabled during onStart(), so we were paused to enable it...
@@ -249,7 +258,8 @@ public class Game extends Activity {
             // When the request to enable Bluetooth returns
             if (resultCode == Activity.RESULT_OK) {
                 // Bluetooth is now enabled, so set up a chat session
-                //setupChat();
+            	if(this.mChatService==null)
+                setUp();
             } else {
                 // User did not enable Bluetooth or an error occurred
                 Log.d(TAG, "BT not enabled");
@@ -292,9 +302,9 @@ public class Game extends Activity {
                 }
                 break;
             case MESSAGE_WRITE:
-                byte[] writeBuf = (byte[]) msg.obj;
+               // byte[] writeBuf = (byte[]) msg.obj;
                 // construct a string from the buffer
-                String writeMessage = new String(writeBuf);
+                //String writeMessage = new String(writeBuf);
                 //mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_READ:
@@ -302,7 +312,10 @@ public class Game extends Activity {
             	byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
-                int m = new Integer((readMessage).trim()).intValue();
+                int m = Integer.valueOf(readMessage.trim());
+                
+               // Toast.makeText(getApplicationContext(), "received "+m, Toast.LENGTH_LONG).show();
+                
             	readMessage(m);
             	
                 break;
@@ -364,6 +377,7 @@ public class Game extends Activity {
 			this.opponent_token="X";
 			Toast.makeText(getApplicationContext(), "You are player 2", Toast.LENGTH_LONG).show();
 			this.setStatus(this.getString(R.string.opponent_turn));
+			this.my_turn=false;
 		}
 		
 		else if(l==this.GAME_DRAW){
@@ -379,9 +393,16 @@ public class Game extends Activity {
 		}
 		else{
 			int pos = l;
-			this.buttons[pos].setText(this.opponent_token);
-			this.my_turn = true;
-			this.setStatus(this.getString(R.string.your_turn));
+			try{
+				this.buttons[pos].setText(this.opponent_token);
+				
+				//Toast.makeText(getApplicationContext(), "setting at position "+l, Toast.LENGTH_SHORT).show();
+				
+				this.buttonTag[pos]=this.OPPONENT_PLAYER;
+				this.my_turn = true;
+				this.setStatus(this.getString(R.string.your_turn));
+			}
+			catch(Exception ex){}
 		}
 		
 		
@@ -402,6 +423,7 @@ public class Game extends Activity {
 					
 					this.buttonTag[pos]=this.MY_PLAYER;
 					this.my_turn=false;
+					
 					
 					((Button)view).setText(this.my_token);
 					this.sendMessage(pos);
@@ -433,26 +455,84 @@ public class Game extends Activity {
 		// TODO Auto-generated method stub
 		if(mode==this.GAME_DRAW){
 			this.setStatus(R.string.game_draw);
+			new AlertDialog.Builder(this).setTitle("Game Draw").setMessage("Game is DRAW\nDo you want to start new game")
+			.setPositiveButton("Ok",null
+					/*
+					new DialogInterface.OnClickListener(){
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							// TODO Auto-generated method stub
+							refreshBoard();
+						}
+				
+			}*/
+					)
+			.setNegativeButton("Cancel", null)
+			.show();
+			
 		}
 		else if(mode==this.GAME_LOST){
 			this.setStatus(R.string.you_lost);
+			new AlertDialog.Builder(this).setTitle("Game Lost").setMessage("You lose\nDo you want to start new game")
+			.setPositiveButton("Ok",null
+					/*new DialogInterface.OnClickListener(){
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							// TODO Auto-generated method stub
+							refreshBoard();
+						}
+				
+			}*/
+					)
+			.setNegativeButton("Cancel", null)
+			.show();
+			
 		}
 		else if(mode==this.GAME_WON){
 			this.setStatus(R.string.you_won);
+			new AlertDialog.Builder(this).setTitle("Game Won").setMessage("You are Winner\nDo you want to start new game")
+			.setPositiveButton("Ok",null
+					/*new DialogInterface.OnClickListener(){
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							// TODO Auto-generated method stub
+							refreshBoard();
+						}
+				
+			}*/
+					)
+			.setNegativeButton("Cancel", null)
+			.show();
 		}
 		
 	}
+	
+	/*
+	 * refresh board to restart
+	 */
+	private void refreshBoard(){
+		for(int i=0;i<9;i++){
+			this.buttons[i].setText("");
+			this.buttonTag[i]=this.NONE;
+			((TextView)this.findViewById(R.id.imageView1)).setClickable(true);
+		}
+		
+	}
+	
 
 	/*
 	 * check if game is finished
 	 */
 	private int gameResult(int token) {
 		if( 
-				(this.buttonTag[0]==token && this.buttonTag[1]==token && this.buttonTag[1]==token) ||
+				(this.buttonTag[0]==token && this.buttonTag[1]==token && this.buttonTag[2]==token) ||
 				(this.buttonTag[3]==token && this.buttonTag[4]==token && this.buttonTag[5]==token) ||
 				(this.buttonTag[6]==token && this.buttonTag[7]==token && this.buttonTag[8]==token) ||
 				(this.buttonTag[0]==token && this.buttonTag[3]==token && this.buttonTag[6]==token) ||
-				(this.buttonTag[1]==token && this.buttonTag[4]==token && this.buttonTag[9]==token) ||
+				(this.buttonTag[1]==token && this.buttonTag[4]==token && this.buttonTag[7]==token) ||
 				(this.buttonTag[2]==token && this.buttonTag[5]==token && this.buttonTag[8]==token) ||
 				(this.buttonTag[0]==token && this.buttonTag[4]==token && this.buttonTag[8]==token) ||
 				(this.buttonTag[2]==token && this.buttonTag[4]==token && this.buttonTag[6]==token) 
@@ -488,14 +568,8 @@ public class Game extends Activity {
 			this.OPPONENT_PLAYER = this.PLAYER_TWO;
 			this.my_token="X";
 			this.opponent_token="0";
-			this.setStatus(this.getString(R.string.player1_turn));
+			this.setStatus("You are player 1 : your turn");
 			
-			/*try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
 			
 			this.my_turn=true;
 			
@@ -508,11 +582,11 @@ public class Game extends Activity {
 			this.my_turn=false;
 			this.my_token="0";
 			this.opponent_token="X";
-			//this.setStatus(this.getString(R.string.opponent_turn));
 			
 		}
+		view.setClickable(false);
 		
-	}
+		}
 	}
 
 	

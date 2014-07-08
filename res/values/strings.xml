@@ -21,7 +21,7 @@
     <string name="title_connected_to">connected to <xliff:g id="device_name">%1$s</xliff:g></string>
     <string name="title_not_connected">not connected</string>
 
-    <!--  DeviceListActivity -->
+    <!-- DeviceListActivity -->
     <string name="scanning">scanning for devices...</string>
     <string name="select_device">select a device to connect</string>
     <string name="none_paired">No devices have been paired</string>
@@ -35,11 +35,13 @@
     <string name="secure_connect">Connect a device - Secure</string>
     <string name="insecure_connect">Connect a device - Insecure</string>
     <string name="discoverable">Make discoverable</string>
-	<string name="player1_turn">You are player 1 : Your Turn</string>
-	<string name="player2_turn">You are player 2 : Your Turn</string>
-	<string name="opponent_turn">Opponent Turn</string>
-	<string name="you_won">You are the winner</string>
-	<string name="you_lost">You lost</string>
-	<string name="game_draw">Game is draw</string>
-	<string name="your_turn">your turn</string>
+    <string name="player1_turn">You are player 1 : Your Turn</string>
+    <string name="player2_turn">You are player 2 : Your Turn</string>
+    <string name="opponent_turn">Opponent Turn</string>
+    <string name="you_won">You are the winner</string>
+    <string name="you_lost">You lost</string>
+    <string name="game_draw">Game is draw</string>
+    <string name="your_turn">your turn</string>
+    <string name="title_activity_server">ServerActivity</string>
+
 </resources>

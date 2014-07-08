@@ -144,7 +144,7 @@ public class DeviceList extends Activity {
         findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 
         // If we're already discovering, stop it
-        if (mBtAdapter.isDiscovering()) {
+       if (mBtAdapter.isDiscovering()) {
             mBtAdapter.cancelDiscovery();
         }
 

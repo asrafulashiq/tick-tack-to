@@ -62,7 +62,7 @@ public class CommunicationService {
     private final Handler mHandler;
     private AcceptThread mSecureAcceptThread;
     private AcceptThread mInsecureAcceptThread;
-    private ConnectThread mConnectThread;
+    private ConnectThread mConnectThread; 
     private ConnectedThread mConnectedThread;
     private int mState;
 
@@ -458,7 +458,7 @@ public class CommunicationService {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
-
+                   
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(Game.MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget();
@@ -479,7 +479,7 @@ public class CommunicationService {
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
-               
+                //this.mmOutStream.flush();
 
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(Game.MESSAGE_WRITE, -1, -1, buffer)
